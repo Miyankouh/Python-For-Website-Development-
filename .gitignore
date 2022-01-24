@@ -1,0 +1,7 @@
+*.desktop.ini
+
+*.idea
+
+*env 
+
+*venv
