@@ -9,20 +9,41 @@ class User:
     def check_password(self, password):
         return self.password == password
 
+    @classmethod
+    def create(cls,  username, password, fullname, email):
+        cls.validate_password(password)
+        return cls(username, password, fullname, email)
+
+    def __str__(self):
+        return self.password
+
+    @staticmethod
+    def validate_password(password):
+        if len(password) < 4:
+            print("password should be more than 3 char")
+            return False
+        return True
+
+
 
 class Customer(User):
     counter = 0  # class attrs
 
     def __init__(self, username, password, fullname, email):
         super().__init__(username, password, fullname, email)
-        self.wallet_amount = 0
-        self.is_enable = False
+        self.__wallet_amount = 0  # privet
+        self._is_enable = False
+        Customer.counter += 1
 
     def __str__(self):
         return self.username
 
     def set_enable(self):
         self.is_enable = True
+
+    @property
+    def wallet(self):  # convert method to the attr
+        return self.__wallet_amount
 
 
 class Reseller(User):

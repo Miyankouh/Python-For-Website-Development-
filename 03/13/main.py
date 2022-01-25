@@ -1,20 +1,4 @@
-from models.all_models import Customer, Product, Reseller
-
-
-# user_list = [1, 2, 3]
-#
-# product_list = [{'upc': 1}, {'upc': 3}, {'upc': 2}]
-#
-# orders_list = [{'upc': 1, 'user': 2}, {'upc': 3, 'user': 3}]
-#
-#
-# type(user_list) == type(product_list) == type(orders_list)  # type = list
-#
-#
-# product_list.append({'upc': 4})
-#
-# user_list.pop()
-
+from models.all_models import Customer, Product, Reseller, User
 
 # class
 
@@ -22,15 +6,18 @@ if __name__ == "__main__":
     # Create customer
     c1 = Customer('new', '123', 'new simple', 'simple1@gmail.com')
     c2 = Customer('now', '456', 'now simple', 'simple2@gmail.com')
-    c3 = Customer('jack', '987', 'jack simple', 'simple3@gmail.com')
+    # c3 = Customer('jack', '987', 'jack simple', 'simple3@gmail.com')
 
+    c1.set_enable()
+    # print(c1.__wallet_amount)
+    print(c1.wallet)  # True
     # print('Check password: ', c1.check_password('123'))
     print(c1.username)
 
     # Create Product
-    # p1 = Product(1, 'Product #1')
-    # p2 = Product(1, 'Product #2', 1000)
-    # p3 = Product(1, 'Product #3', 1000, 'Some description about product')
+    p1 = Product(1, 'Product #1')
+    p2 = Product(1, 'Product #2', 1000)
+    p3 = Product(1, 'Product #3', 1000, 'Some description about product')
 
     # Product.is_free()  > Error
     # Product.upc        > Error
@@ -61,7 +48,10 @@ if __name__ == "__main__":
 
     # Reseller composition
     p2 = Product(2, 'Product #2', 1000, reseller=r1)
-    print(type(p2), type(p2.reseller))
-    print(p2.name, p2.reseller.check_password('123'))
+    # print(type(p2), type(p2.reseller))
+    # print(p2.name, p2.reseller.check_password('123'))
 
-
+    u2 = User.create('reseller2', '247', 'Reseller', 'reseller2@gmail.com')
+    User.validate_password('123')
+    if u2:
+        print(u2)
