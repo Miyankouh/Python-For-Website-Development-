@@ -17,3 +17,14 @@ class D(A, B):
 
 class E(D, C):
     pass
+
+
+def search(name, age=None, mobile=None, greate=None):
+    pass
+
+# polymorphism
+search(name='Nima')
+search(age=23)
+search(mobile=+989112222)
+search(mobile=+98914569, name='farhad')
+search()
