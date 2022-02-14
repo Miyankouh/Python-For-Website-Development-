@@ -2,13 +2,23 @@ import json
 
 import requests
 from abc import ABC, abstractmethod
-from config import BASE_LINK
+from config import BASE_LINK, STORAGE_TYPE
 from bs4 import BeautifulSoup
 
 from parser import AdvertisementPageParser
+from storage import MongoStorage, FileStorage
 
 
 class CrawlerBase(ABC):
+
+    def __init__(self):
+        self.storage = self.__set_storage()
+
+    @staticmethod
+    def __set_storage():
+        if STORAGE_TYPE == 'mongo':
+            return MongoStorage()
+        return FileStorage()
 
     @abstractmethod
     def start(self, store=False):
@@ -32,6 +42,7 @@ class LinkCrawler(CrawlerBase):
     def __init__(self, cities, link=BASE_LINK):
         self.cities = cities
         self.link = link
+        super().__init__()
 
     def find_links(self, html_doc):
         soup = BeautifulSoup(html_doc, 'html.parser')
@@ -64,8 +75,7 @@ class LinkCrawler(CrawlerBase):
         return adv_links
 
     def store(self, data, *args):
-        with open('fixtures/data.json', 'w') as f:
-            f.write(json.dumps(data))
+        self.storage.store(data, 'data')
 
 
 class DataCrawler(CrawlerBase):
@@ -73,10 +83,11 @@ class DataCrawler(CrawlerBase):
     def __init__(self):
         self.links = self.__load_links()
         self.parser = AdvertisementPageParser()
+        super().__init__()
 
     @staticmethod
     def __load_links():
-        with open('fixtures/data.json', 'r') as f:
+        with open('fixture/new/data.json', 'r') as f:
             links = json.loads(f.read())
         return links
 
@@ -88,6 +99,4 @@ class DataCrawler(CrawlerBase):
                 self.store(data, data.get('post_id', 'sample'))
 
     def store(self, data, filename):
-        with open(f'fixtures/adv/{filename}.json', 'w') as f:
-            f.write(json.dumps(data))
-        print(f'fixtures/adv/{filename}.json')
+        self.storage.store(data, filename)

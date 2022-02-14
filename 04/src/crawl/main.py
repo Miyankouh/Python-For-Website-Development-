@@ -1,5 +1,5 @@
 import sys
-from crawl import LinkCrawler, DataCrawler
+from crawl2 import LinkCrawler, DataCrawler
 
 if __name__ == "__main__":
     switch = sys.argv[1]
