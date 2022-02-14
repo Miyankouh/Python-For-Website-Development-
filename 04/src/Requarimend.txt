@@ -1,0 +1,2 @@
+pymongo==4.0.1
+requestes==0.0.1

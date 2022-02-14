@@ -11,11 +11,11 @@ from parser import AdvertisementPageParser
 class CrawlerBase(ABC):
 
     @abstractmethod
-    def start(self):
+    def start(self, store=False):
         pass
 
     @abstractmethod
-    def store(self, data):
+    def store(self, data, filename=None):
         pass
 
     @staticmethod
@@ -25,8 +25,6 @@ class CrawlerBase(ABC):
         except requests.HTTPError:
             return None
         return response
-
-
 
 
 class LinkCrawler(CrawlerBase):
@@ -44,7 +42,7 @@ class LinkCrawler(CrawlerBase):
         crawl = True
         adv_links = list()
         while crawl:
-            response = self.get(url + start)
+            response = self.get(url+str(start))
             if response is None:
                 crawl = False
                 continue
@@ -55,15 +53,17 @@ class LinkCrawler(CrawlerBase):
 
         return adv_links
 
-    def start(self):
+    def start(self, store=False):
         adv_links = list()
         for city in self.cities:
             links = self.start_crawl_city(self.link.format(city))
             print(f'{city} total: {len(links)}')
             adv_links.extend(links)
-        self.store([li.get('href') for li in adv_links])
+        if store:
+            self.store([li.get('href') for li in adv_links])
+        return adv_links
 
-    def store(self, data):
+    def store(self, data, *args):
         with open('fixtures/data.json', 'w') as f:
             f.write(json.dumps(data))
 
@@ -73,19 +73,21 @@ class DataCrawler(CrawlerBase):
     def __init__(self):
         self.links = self.__load_links()
         self.parser = AdvertisementPageParser()
-    
+
     @staticmethod
     def __load_links():
         with open('fixtures/data.json', 'r') as f:
             links = json.loads(f.read())
         return links
 
-    def start(self):
+    def start(self, store=False):
         for link in self.links:
             response = self.get(link)
             data = self.parser.parse(response.text)
-            print(data)
+            if store:
+                self.store(data, data.get('post_id', 'sample'))
 
-    def store(self, data):
-        with open('fixtures/data.json', 'w') as f:
+    def store(self, data, filename):
+        with open(f'fixtures/adv/{filename}.json', 'w') as f:
             f.write(json.dumps(data))
+        print(f'fixtures/adv/{filename}.json')
