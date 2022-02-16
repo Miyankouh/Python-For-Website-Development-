@@ -8,7 +8,7 @@ class AdvertisementPageParser:
 
     @property
     def title(self):
-        title_tag = self.soup.find('span', attrs={'id': '#titletextonly'})
+        title_tag = self.soup.find('span', attrs={'id': 'titletextonly'})
         if title_tag:
             return title_tag.text
         return None
@@ -37,7 +37,7 @@ class AdvertisementPageParser:
 
     @property
     def created_time(self):
-        time_selector = 'body > section > section > section > div.postinginfo > p:nth-child(2) > time'
+        time_selector = 'body > section > section > section > div.postinginfos > p:nth-child(2) > time'
         time = self.soup.select_one(time_selector)
         if time:
             return time.attrs['datetime']
