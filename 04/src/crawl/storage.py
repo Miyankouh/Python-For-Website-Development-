@@ -29,17 +29,17 @@ class MongoStorage(StorageAbstract):
 
     def load(self, collection_name, filter_data=None):
         collection = self.mongo.database[collection_name]
-        if filter_data is None:
+        if filter_data is not None:
             data = collection.find(filter_data)
         else:
             data = collection.find()
-        return self.mongo.database.adverstisements_links.find({'flag': False})
+        return data
 
     def update_flag(self, data):
-        """" """
-        self.mongo.database.avdertisements_links.find_one_and_update(
+        """"""
+        self.mongo.database.advertisements_links.find_one_and_update(
             {'_id': data['_id']},
-            {'$set': {'flag': True}},
+            {'$set': {'flag': True}}
         )
 
 
@@ -52,7 +52,7 @@ class FileStorage(StorageAbstract):
         print(f'fixtures/adv/{filename}.json')
 
     def load(self):
-        with open('fixtures/adv/advertisement_links.json', 'r') as f:
+        with open('fixtures/adv/advertisements_links.json', 'r') as f:
             links = json.loads(f.read())
         return links
 

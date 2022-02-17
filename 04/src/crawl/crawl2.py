@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from parser import AdvertisementPageParser
 from storage import MongoStorage, FileStorage
+
 from utils import get_cookie
 
 
@@ -12,7 +13,7 @@ class CrawlerBase(ABC):
 
     def __init__(self):
         self.storage = self.__set_storage()
-        #
+        # Remember to comment this line and then run the code
         # self.cookie = get_cookie()
 
     @staticmethod
@@ -37,11 +38,6 @@ class CrawlerBase(ABC):
         return response
 
 
-def find_links(html_doc):
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    return soup.find_all('a', attrs={'class': 'hdrlnk'})
-
-
 class LinkCrawler(CrawlerBase):
 
     def __init__(self, cities, link=BASE_LINK):
@@ -49,16 +45,20 @@ class LinkCrawler(CrawlerBase):
         self.link = link
         super().__init__()
 
+    def find_links(self, html_doc):
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        return soup.find_all('a', attrs={'class': 'hdrlnk'})
+
     def start_crawl_city(self, url):
         start = 0
         crawl = True
         adv_links = list()
         while crawl:
-            response = self.get(url+str(start))
+            response = self.get(url + str(start))
             if response is None:
                 crawl = False
                 continue
-            new_links = find_links(response.text)
+            new_links = self.find_links(response.text)
             adv_links.extend(new_links)
             start += 120
             crawl = bool(len(new_links))
@@ -87,7 +87,7 @@ class DataCrawler(CrawlerBase):
         self.parser = AdvertisementPageParser()
 
     def __load_links(self):
-        return self.storage.load('advertisements_link', {'flag': False})
+        return self.storage.load('advertisements_links', {'flag': False})
 
     def start(self, store=False):
         for link in self.links:
@@ -107,7 +107,7 @@ class ImageDownloader(CrawlerBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
-        self.advertisement = self.__load_advertisements()
+        self.advertisements = self.__load_advertisements()
 
     def __load_advertisements(self):
         return self.storage.load('advertisement_data')
@@ -122,7 +122,7 @@ class ImageDownloader(CrawlerBase):
 
     def start(self, store=True):
         for advertisement in self.advertisements:
-            counter = 0
+            counter = 1
             for image in advertisement['images']:
                 response = self.get(image['url'])
                 if store:
@@ -131,7 +131,7 @@ class ImageDownloader(CrawlerBase):
 
     def store(self, data, adv_id, img_number):
         filename = f'{adv_id}-{img_number}'
-        return self.save_to_disk()
+        return self.save_to_disk(data, filename)
 
     def save_to_disk(self, response, filename):
         with open(f'fixtures/images/{filename}.jpg', 'ab') as f:
@@ -139,9 +139,5 @@ class ImageDownloader(CrawlerBase):
             for _ in response.iter_content():
                 f.write(response.content)
 
-
-            print(filename)
-            return filename
-
-
-
+        print(filename)
+        return filename

@@ -42,10 +42,17 @@ class AdvertisementPageParser:
         if time:
             return time.attrs['datetime']
 
+    @property
+    def images(self):
+        images_list = self.soup.find_all('img')
+        images_sources = set([img.attrs['src'].replace('50x50c', '600x450') for img in images_list])
+        return [{"url": src, 'flag': False} for src in images_sources]
+
     def parse(self, html_data):
         self.soup = BeautifulSoup(html_data, 'html.parser')
         data = dict(
             title=self.title, price=self.price, body=self.body,
             post_id=self.post_id, created_time=self.created_time,
+            images=self.images
         )
         return data
