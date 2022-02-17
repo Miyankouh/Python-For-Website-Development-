@@ -5,12 +5,15 @@ from bs4 import BeautifulSoup
 
 from parser import AdvertisementPageParser
 from storage import MongoStorage, FileStorage
+from utils import get_cookie
 
 
 class CrawlerBase(ABC):
 
     def __init__(self):
         self.storage = self.__set_storage()
+        #
+        # self.cookie = get_cookie()
 
     @staticmethod
     def __set_storage():
@@ -26,10 +29,9 @@ class CrawlerBase(ABC):
     def store(self, data, filename=None):
         pass
 
-    @staticmethod
-    def get(link):
+    def get(self, link):
         try:
-            response = requests.get(link)
+            response = requests.get(link, cookies=self.cookie)
         except requests.HTTPError:
             return None
         return response
@@ -85,7 +87,7 @@ class DataCrawler(CrawlerBase):
         self.parser = AdvertisementPageParser()
 
     def __load_links(self):
-        return self.storage.load('advertisements_link', {'flag':False})
+        return self.storage.load('advertisements_link', {'flag': False})
 
     def start(self, store=False):
         for link in self.links:
@@ -136,6 +138,7 @@ class ImageDownloader(CrawlerBase):
             f.write(response.content)
             for _ in response.iter_content():
                 f.write(response.content)
+
 
             print(filename)
             return filename
