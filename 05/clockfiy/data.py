@@ -1,6 +1,5 @@
 #  NORMALIZED
 
-
 users = [
     {
         "username": "moo",
@@ -119,4 +118,3 @@ invoice = {
         },
     ]
 }
-
