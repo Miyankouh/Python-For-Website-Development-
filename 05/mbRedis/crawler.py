@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 from redis import Redis
 
-
 client = Redis()
 
 

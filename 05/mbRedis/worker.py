@@ -1,15 +1,14 @@
 import sys
-
 from redis import Redis
-
 
 client = Redis()
 
 
 def watch_links_data(name):
     print(f"Worker {name} started")
+
     while True:
-        link = client.blpop('links')  # b = block
+        link = client.blpop('links')
         print(link)
 
     print(f"Worker {name} ended")
