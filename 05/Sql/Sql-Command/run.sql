@@ -194,6 +194,37 @@ COUNT(column)       Counts rows a sepified table or view.
 
 
 
+-- #------------------------------------------------------------------------------------------------
+
+-- limit syntax
+
+> SELECT * FROM table_name LIMIT start, length;
+
+
+
+-- Exampel
+> SELECT * FROM Cuostomers LIMIT 5, 10;
+
+
+-- pagination
+> SELECT * FROM Cuostomers LIMIT start_point, PAGE_SIZE;
+>> start_point = (page-1) * PAGE_SIZE
+
+
+
+-- #------------------------------------------------------------------------------------------------
+
+-- join
+
+--ANSI SQL-89
+--  SELECT * FROM Products, Suppliers
+--  where Products.SuppliersID = Suppliers.SuppliersID
+
+
+--ANSI SQL-92
+SELECT * FROM Products JOIN Suppliers
+ON Products.SuppliersID = Suppliers.SuppliersID
+
 
 
 
