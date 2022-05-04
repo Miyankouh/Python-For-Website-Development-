@@ -11,7 +11,7 @@ def crawl_page(url):
         soup = BeautifulSoup(response.text, 'html.parser')
         header_div = soup.find('div', attrs={'class': 'news-detail-header'})
         title = header_div.find('h1')
-        body = soup.select_one('.detYazi cf')
+        body = soup.select_one('.detYazi')
         return {'body': body.text, 'title': title.text}
     return {'body':'' , 'title': ''}
 
