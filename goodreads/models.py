@@ -2,8 +2,11 @@ from datetime import datetime
 from peewee import MySQLDatabase, Model, CharField, ForeignKeyField,\
     DateField, SmallIntegerField, TextField, DateTimeField
 
+from playhouse.db_url import connect
 
-database = MySQLDatabase('mysql://username:password@127.0.0.1:3306/database name')
+
+# databases = MySQLDatabase('my_app', user='your user name', password='your password', host='127.0.01', port=3306)
+database = connect('mysql://username:password@127.0.0.1:3306/database name')
 
 
 class BaseModel(Model):
