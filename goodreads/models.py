@@ -1,12 +1,12 @@
 from datetime import datetime
-from peewee import MySQLDatabase, Model, CharField, ForeignKeyField,\
-    DateField, SmallIntegerField, TextField, DateTimeField
+
+from peewee import MySQLDatabase, Model, CharField, ForeignKeyField, DateField, DateTimeField, SmallIntegerField, \
+    TextField
 
 from playhouse.db_url import connect
 
-
-# databases = MySQLDatabase('my_app', user='your user name', password='your password', host='127.0.01', port=3306)
-database = connect('mysql://username:password@127.0.0.1:3306/database name')
+# database = MySQLDatabase('my_app', user='hosein', password='123', host='127.0.0.1', port=3306)
+database = connect('mysql://root:1234@127.0.0.1:3306/goodreads')
 
 
 class BaseModel(Model):
@@ -19,21 +19,21 @@ class BaseModel(Model):
 
 
 class User(BaseModel):
-    username = CharField(max_length=35)
-    password = CharField(max_length=35)
+    username = CharField(max_length=32)
+    password = CharField(max_length=32)
 
 
 class Book(BaseModel):
-    isbn = CharField(max_length=35)
-    name = CharField(max_length=225)
+    isbn = CharField(max_length=32)
+    name = CharField(max_length=255)
 
 
 class Author(BaseModel):
-    name = CharField(max_length=35)
+    name = CharField(max_length=32)
 
 
 class Shelf(BaseModel):
-    name = CharField(max_length=35)
+    name = CharField(max_length=32)
     user = ForeignKeyField(User, backref='shelves')
 
 
@@ -43,10 +43,10 @@ class BookShelf(BaseModel):
     shelf = ForeignKeyField(Shelf, backref='book_shelves')
     start_date = DateField(null=True)
     end_date = DateField(null=True)
-    rete = SmallIntegerField()
-    commetnt = TextField()
+    rate = SmallIntegerField()
+    comment = TextField()
 
-    created_time = DateTimeField(default=datetime())
+    created_time = DateTimeField(default=datetime.now())
 
 
 class BookAuthor(BaseModel):
@@ -59,11 +59,12 @@ class BookTranslator(BaseModel):
     translator = ForeignKeyField(Author, backref='translated_books')
 
 
-class UserAuthor(BaseModel):
+class UserAuthorRelation(BaseModel):
     user = ForeignKeyField(User, backref='followed_authors')
-    authors = ForeignKeyField(Author, backref='following_users')
+    author = ForeignKeyField(Author, backref='following_users')
 
 
 class UserRelation(BaseModel):
     following = ForeignKeyField(User, backref='following')
     follower = ForeignKeyField(User, backref='follower')
+

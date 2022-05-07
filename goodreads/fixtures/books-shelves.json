@@ -1,0 +1,38 @@
+[
+  {
+    "user_id": 1,
+    "book_id": 1,
+    "shelf_id": 3,
+    "start_date": "2021-01-25",
+    "end_date": "2021-02-25",
+    "rate": 4,
+    "comment": "The best marketing book I've ever read. Concise, easy to follow and to the point. I highly recommend Traction to any entrepreneur or marketer."
+  },
+  {
+    "user_id": 1,
+    "book_id": 2,
+    "shelf_id": 3,
+    "start_date": "2020-12-20",
+    "end_date": "2021-01-12",
+    "rate": 5,
+    "comment": "I talk about the developed and developing world all the time, but I shouldn’t.\n\nMy late friend Hans Rosling called the labels “outdated” and “meaningless.” Any categorization that lumps together China and the Democratic Republic of Congo is too broad to be useful."
+  },
+  {
+    "user_id": 2,
+    "book_id": 3,
+    "shelf_id": 2,
+    "start_date": "2020-12-20",
+    "end_date": "2021-01-12",
+    "rate": 4,
+    "comment": "Amazing book. As simple as that. The book is well-written and the author keeps you engaged throughout the Mainz, Borussia Dortmund and Liverpool journeys. Pity that it was written before Liverpool's incredible 2018 Champions League journey."
+  },
+  {
+    "user_id": 2,
+    "book_id": 1,
+    "shelf_id": 6,
+    "start_date": "2020-12-20",
+    "end_date": "2021-01-12",
+    "rate": 4,
+    "comment": "Amazing book. As simple as that. The book is well-written and the author keeps you engaged throughout the Mainz, Borussia Dortmund and Liverpool journeys. Pity that it was written before Liverpool's incredible 2018 Champions League journey."
+  }
+]
