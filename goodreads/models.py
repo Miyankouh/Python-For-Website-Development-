@@ -5,7 +5,8 @@ from peewee import MySQLDatabase, Model, CharField, ForeignKeyField, DateField, 
 
 from playhouse.db_url import connect
 
-# database = MySQLDatabase('my_app', user='hosein', password='123', host='127.0.0.1', port=3306)
+
+# database = MySQLDatabase('my_app', user='root', password='1234', host='127.0.0.1', port=3306)
 database = connect('mysql://root:1234@127.0.0.1:3306/goodreads')
 
 
@@ -22,6 +23,12 @@ class User(BaseModel):
     username = CharField(max_length=32)
     password = CharField(max_length=32)
 
+    @classmethod
+    def authenticate(cls, username, password):
+        return cls.select().where(
+            cls.username==username, cls.password==password
+            ).first()
+
 
 class Book(BaseModel):
     isbn = CharField(max_length=32)
@@ -33,6 +40,10 @@ class Author(BaseModel):
 
 
 class Shelf(BaseModel):
+    READ = 'read'
+    CURRENTLY_READ = 'currently reading'
+    WANT_TO_READ = 'want to read'
+
     name = CharField(max_length=32)
     user = ForeignKeyField(User, backref='shelves')
 
@@ -47,6 +58,11 @@ class BookShelf(BaseModel):
     comment = TextField()
 
     created_time = DateTimeField(default=datetime.now())
+
+    def change_to_read(self):
+        read_shelf = self.user.shelves.where(Shelf.name == Shelf.READ).first()
+        self.shelf = read_shelf
+        self.save()
 
 
 class BookAuthor(BaseModel):
@@ -67,4 +83,3 @@ class UserAuthorRelation(BaseModel):
 class UserRelation(BaseModel):
     following = ForeignKeyField(User, backref='following')
     follower = ForeignKeyField(User, backref='follower')
-

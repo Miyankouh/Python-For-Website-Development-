@@ -33,7 +33,36 @@ def show_data():
     print("#" * 79)
 
 
+def show_user_data(username="hosein", password="654321"):
+    user = User.authenticate(username, password)
+    
+    if user is None:
+        print("User not fond")
+        return
+    print(f"username: {user.username}")
+    
+    print("BOOKshelves")
+    for shelf in user.shelves:
+        print(f"\t{shelf.name} ({shelf.book_shelves.count()})")
+
+    print("Books")
+    for book_shelf_instance in user.book_shelves:
+        print(f"{book_shelf_instance.id}\t{book_shelf_instance.book.name}")
+
+    
+    # book = Book.get_by_id(3)
+    # read_shelf = user.shelves.where(Shelf.name == Shelf.READ)
+    
+    # name_book_shelf = BookShelf.create(
+    #     user=user, book=book, shelf=read_shelf,
+    #     start_date='2020-09-12', rate='5', comment="VERY GOOD"
+    #     )
+
+
 if __name__ == '__main__':
     # create_tables()
-    load_data()
+    # load_data()
     # show_data()
+    show_user_data(username="hosein")
+    # bs = BookShelf.get_by_id(2)
+    # bs.change_to_read()
