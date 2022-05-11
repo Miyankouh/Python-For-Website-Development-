@@ -11,7 +11,6 @@ database = connect('mysql://root:1234@127.0.0.1:3306/goodreads')
 
 
 class BaseModel(Model):
-
     class Meta:
         database = database
 

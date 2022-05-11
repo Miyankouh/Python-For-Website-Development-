@@ -2,7 +2,7 @@ from fixtures.reports import show_users, show_books
 from importer import UserImporter, BookImporter, BookAuthorImporter, ShelfImporter, BookShelfImporter, AuthorImporter
 from models import database, User, Book, Author, Shelf, BookShelf, BookAuthor, BookTranslator, UserAuthorRelation, \
     UserRelation
-
+from peewee import fn
 
 def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+Shift+B to toggle the breakpoint.
@@ -49,7 +49,6 @@ def show_user_data(username="hosein", password="654321"):
     for book_shelf_instance in user.book_shelves:
         print(f"{book_shelf_instance.id}\t{book_shelf_instance.book.name}")
 
-    
     # book = Book.get_by_id(3)
     # read_shelf = user.shelves.where(Shelf.name == Shelf.READ)
     
@@ -59,10 +58,35 @@ def show_user_data(username="hosein", password="654321"):
     #     )
 
 
+def show_book_rates():
+    query = BookShelf.select(
+        BookShelf.book, 
+        fn.AVG(BookShelf.rate).alias('rates_avg'), # wrong data
+        fn.SUM(BookShelf.rate).alias('rates_sum'),
+        fn.COUNT(BookShelf.rate).alias('rates_count'),
+        ).group_by(BookShelf.book)
+
+    for q in query:
+        print(q.book_id, q.rates_avg, q.rates_sum/q.rates_count)
+
+
+def show_book_shelves():
+    query = BookShelf.select(
+        BookShelf.user, 
+        BookShelf.shelf, 
+        fn.COUNT(BookShelf.book).alias('books_count')
+        ).group_by(BookShelf.shelf)
+
+    for q in query:
+        print(q.user.username, q.shelf.name, q.books_count)
+
+
 if __name__ == '__main__':
     # create_tables()
     # load_data()
     # show_data()
-    show_user_data(username="hosein")
+    # show_user_data(username="hosein")
     # bs = BookShelf.get_by_id(2)
     # bs.change_to_read()
+    # show_book_rates()
+    show_book_shelves()
