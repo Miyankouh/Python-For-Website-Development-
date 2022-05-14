@@ -1,8 +1,6 @@
 from datetime import datetime
-
 from peewee import MySQLDatabase, Model, CharField, ForeignKeyField, DateField, DateTimeField, SmallIntegerField, \
     TextField
-
 from playhouse.db_url import connect
 
 

@@ -1,8 +1,11 @@
+from typing_extensions import Self
 from fixtures.reports import show_users, show_books
-from importer import UserImporter, BookImporter, BookAuthorImporter, ShelfImporter, BookShelfImporter, AuthorImporter
-from models import database, User, Book, Author, Shelf, BookShelf, BookAuthor, BookTranslator, UserAuthorRelation, \
-    UserRelation
+from importer import UserImporter, BookImporter, BookAuthorImporter,\
+    ShelfImporter, BookShelfImporter, AuthorImporter
+from models import database, User, Book, Author, Shelf, BookShelf, BookAuthor,\
+    BookTranslator, UserAuthorRelation, UserRelation
 from peewee import fn
+
 
 def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+Shift+B to toggle the breakpoint.
@@ -75,10 +78,34 @@ def show_book_shelves():
         BookShelf.user, 
         BookShelf.shelf, 
         fn.COUNT(BookShelf.book).alias('books_count')
-        ).group_by(BookShelf.shelf)
+        ).group_by(BookShelf.shelf).order_by(BookShelf.books_count)
 
     for q in query:
         print(q.user.username, q.shelf.name, q.books_count)
+
+
+def show_all_book_shelves():
+    query = BookShelf.select().order_by(BookShelf.created_time) # hit
+
+    for q in query:
+        print(q.rate) # no hit
+        # print(q.user.username) # hit 2
+        # print(q.shelf.name) # hit 3
+        print(q.book.name) # hit 4
+        print('#'*20)
+
+
+def show_all_book_shelves_optimize():
+    query = BookShelf.select().join(User)\
+        .switch(BookShelf).join(Book)\
+        .switch(BookShelf).join(Shelf) # hit 1
+
+    for q in query:
+        print(q.rate) # no hit
+        print(q.user.username) # no hit
+        print(q.shelf.name) # no hit
+        print(q.book.name) # no hit
+        print('#'*20)
 
 
 if __name__ == '__main__':
@@ -89,4 +116,6 @@ if __name__ == '__main__':
     # bs = BookShelf.get_by_id(2)
     # bs.change_to_read()
     # show_book_rates()
-    show_book_shelves()
+    # show_book_shelves()
+    # show_all_book_shelves()
+    show_all_book_shelves_optimize()
