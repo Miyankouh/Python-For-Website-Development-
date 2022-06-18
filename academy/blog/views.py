@@ -20,3 +20,7 @@ def category_list(request):
 
 def post_detail(request, post_title):
     return HttpResponse(f'post detail {post_title}')
+
+
+def custom_post_detail(request):
+    return HttpResponse('custom detail page')
