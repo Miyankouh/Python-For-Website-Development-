@@ -12,11 +12,22 @@ class Transaction(models.Model):
         (PURCHASE, "Purchase"),
         (TRANSFER, "Transfer"),
     )
-    user = models.ForeignKey(User, related_name='transaction', on_delete=models.RESTRICT)
-    transaction_type = models.PositiveSmallIntegerField(choices=TRANSACTION_TYPE_CHOICES, default=CHARGE)
+    user = models.ForeignKey(
+        User, related_name='transaction', on_delete=models.RESTRICT)
+    transaction_type = models.PositiveSmallIntegerField(
+        choices=TRANSACTION_TYPE_CHOICES, default=CHARGE)
     amount = models.BigIntegerField()
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name} - {self.get_transaction_type_display()} - {self.amount}"
-    
+
+
+class UserBalance(models.Model):
+    user = models.ForeignKey(
+        User, related_name='balance_records', on_delete=models.RESTRICT)
+    balance = models.BigIntegerField()
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.balance} - {self.created_time}"
