@@ -57,3 +57,19 @@ class UserBalance(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.balance} - {self.created_time}"
+
+    @classmethod
+    def record_user_balance(cls, user):
+        positive_transactions = Sum('amount', filter=Q(transaction_type=1))
+        negative_transactions = Sum('amount', filter=Q(transaction_type__in=[2, 3]))
+
+        user_balance = user.transactions.all().aggregate(
+            balance=Coalesce(positive_transactions, 0) - Coalesce(negative_transactions, 0)
+        )
+        instance = cls.objects.create(user=user, balance=user_balance['balance'])
+        return instance
+
+    @classmethod
+    def record_all_users_balance(cls):
+        for user in User.objects.all():
+            record = cls.record_user_balance(user)
