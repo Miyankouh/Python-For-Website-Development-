@@ -102,15 +102,32 @@ class TransferTransaction(models.Model):
     def transfer(cls, sender, receiver, amount):
         if Transaction.user_balance(sender) < amount:
             return "Transaction not Allowed, Insufficient balance"
+        
+        with transaction.atomic():
+            sender_transaction = Transaction.objects.create(
+                user=sender, amount=amount, transaction_type=Transaction.TRANSFER_SENT
+            )
 
-        sender_transaction = Transaction.objects.create(
-            user=sender, amount=amount, transaction_type=Transaction.TRANSFER_SENT
-        )
+            receiver_transaction = Transaction.objects.create(
+                user=receiver, amount=amount, transaction=Transaction.TRANSFER_RECEIVED
+            )
 
-        receiver_transaction = Transaction.objects.create(
-            user=receiver, amount=amount, transaction=Transaction.TRANSFER_RECEIVED
-        )
-
-        instance = cls.create(sender_transaction=sender_transaction,
-                              receiver_transaction=receiver_transaction)
+            instance = cls.create(sender_transaction=sender_transaction,
+                                receiver_transaction=receiver_transaction)
         return instance
+
+
+class UserScore(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField()
+
+    @classmethod
+    def change_score(cls, user, score):
+        with transaction.atomic():
+            instance = cls.objects.select_for_update().get(user=user)
+            if not instance.exists():
+                instance = cls.objects.create(user=user, score=0)
+            else:
+                instance = instance.first()
+            instance.score += score
+            instance.save()
