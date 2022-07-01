@@ -1,6 +1,22 @@
 from django.db import models
 
 
+class iSActiveManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).select_related('category', 'brand')
+
+    def actives(self, *args, **kwargs):
+        return self.get_queryset(*args, **kwargs).filter(is_active=True)
+
+    def deactives(self, *args, **kwargs):
+        return self.get_queryset(*args, **kwargs).filter(is_active=True)
+
+
+class iSActiveCategoryManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(category__is_active=True)
+
+
 class ProductType(models.Model):
     title = models.CharField(max_length=32, blank=True)
     description = models.TimeField(blank=True, null=True)
@@ -64,6 +80,10 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='products')
+
+    default_manager = models.Manager
+    objects = iSActiveManager()
+    is_active_category_manager = iSActiveCategoryManager()
 
     def __str__(self):
         return self.title
