@@ -73,3 +73,9 @@ def product_search(request):
     context = "\n".join(
         [f"{product.title}, {product.upc}" for product in products])
     return HttpResponse(f"search page :\n{context}")
+
+
+def user_profile(request):
+    if request.user.is_authenticated:
+        return HttpResponse(f"Hello {request.user.username}")
+    return HttpResponse(f"Hello gouts user")
