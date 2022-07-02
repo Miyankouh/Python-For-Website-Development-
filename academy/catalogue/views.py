@@ -1,7 +1,9 @@
+from django.views.decorators.http import require_http_methods, require_GET, require_POST
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.db.models import Q
 from django.http import HttpResponse
 from catalogue.models import Brand, Category, Product, ProductType
-
+from catalogue.utils import check_is_active, check_is_staff
 
 def product_list(request):
     # products = Product.objects.filter(is_active=True)
@@ -75,7 +77,18 @@ def product_search(request):
     return HttpResponse(f"search page :\n{context}")
 
 
+@login_required()
+@require_http_methods(request_method_list=['GET'])
+@user_passes_test(check_is_active)
+@user_passes_test(lambda u: u.is_staff)
+@permission_required('transaction.has_score_permission', raise_exception=True)
 def user_profile(request):
-    if request.user.is_authenticated:
         return HttpResponse(f"Hello {request.user.username}")
-    return HttpResponse(f"Hello gouts user")
+
+
+@login_required
+# @require_GET
+@require_POST
+@user_passes_test(lambda u: u.age > 14)
+def campaign(request):
+    pass

@@ -121,6 +121,11 @@ class UserScore(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     score = models.PositiveSmallIntegerField()
 
+    class Meta:
+        permissions = [
+            ('has_score_permission', 'user has score permission')
+        ]
+
     @classmethod
     def change_score(cls, user, score):
         with transaction.atomic():
