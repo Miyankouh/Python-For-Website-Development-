@@ -1,7 +1,8 @@
+from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_GET, require_POST
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from catalogue.models import Brand, Category, Product, ProductType
 from catalogue.utils import check_is_active, check_is_staff
 
@@ -25,11 +26,10 @@ def product_list(request):
     #     product_type = product_type, upc=789465, title="test Product",
     #     description='', category=category, brand=brand
     # )
-
-    products = Product.objects.select_related('category').all()
-    context = "\n".join(
-        [f"{product.title}, {product.upc}, {product.category.name}" for product in products])
-    return HttpResponse(context)
+    context = dict()
+    context['products'] = Product.objects.select_related('category').all()
+    
+    return render(request, "catalogue/product_list.html", context)
 
 
 def product_detail(request, pk):
@@ -44,10 +44,9 @@ def product_detail(request, pk):
     queryset = Product.objects.filter(
         is_active=True).filter(Q(pk=pk) | Q(upc=pk))
     if queryset.exists():
-        product = queryset.first()
-        return HttpResponse(f"title: {product.title}")
-    return HttpResponse("PRODUCT DOES NOT EXIST")
-
+        product = queryset.first() 
+        return render(request, 'catalogue/product_detail.html', {"product":product})
+    raise Http404
 
 def category_products(request, pk):
     try:
