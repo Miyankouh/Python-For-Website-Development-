@@ -1,0 +1,9 @@
+{% load category_tags %}
+
+
+{% get_category as categories %}
+
+
+{%for category in categories %}
+    <p>{{ category }}</p>
+{% endfor %}

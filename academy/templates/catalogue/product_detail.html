@@ -8,7 +8,7 @@
 
 
 {% block data %}
-    <h3> {{product.title}} </h3>
-    <p>  {{product.description}} </p>
+    <h3> {{product.title|title}} </h3>
+    <p>  {{product.description|truncatewords:5}} </p>
     <p>$ {{product.stock.price}} </p>
 {% endblock %}
