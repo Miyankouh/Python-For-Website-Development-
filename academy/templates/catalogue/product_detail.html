@@ -8,6 +8,9 @@
 
 
 {% block data %}
+    {% for pi in product.images.all  %}
+        <img src="{{ pi.image.url }}">
+    {% endfor %}
     <h3> {{product.title|title}} </h3>
     <p>  {{product.description|truncatewords:5}} </p>
     <p>$ {{product.stock.price}} </p>
