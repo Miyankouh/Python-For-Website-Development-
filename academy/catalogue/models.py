@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class iSActiveManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).select_related('category', 'brand')
@@ -61,6 +62,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("category-detail", args=[self.pk])
     
 
 class Brand(models.Model):

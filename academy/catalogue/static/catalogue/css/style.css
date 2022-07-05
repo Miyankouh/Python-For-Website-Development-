@@ -1,0 +1,9 @@
+.nav-bar-items {
+    color: rgb(226, 221, 221);
+    background-color: black;
+    display: inline-block;
+    padding: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-decoration: none;
+}
