@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class iSActiveManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).select_related('category', 'brand')
@@ -24,13 +23,14 @@ class ProductType(models.Model):
 
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name = 'ProductType'
         verbose_name_plural = 'ProductTypes'
-    
+
     def __str__(self):
         return self.title
-    
+
 
 class ProductAttribute(models.Model):
     INTEGER = 1
@@ -44,12 +44,14 @@ class ProductAttribute(models.Model):
     )
 
     title = models.CharField(max_length=32)
-    product_type = models.ForeignKey(ProductType, on_delete=models.CASCADE, related_name='attributes')
-    attribute_type = models.PositiveSmallIntegerField(default=INTEGER, choices=ATTRIBUTE_TYPE_FIELDS)
+    product_type = models.ForeignKey(
+        ProductType, on_delete=models.CASCADE, related_name='attributes')
+    attribute_type = models.PositiveSmallIntegerField(
+        default=INTEGER, choices=ATTRIBUTE_TYPE_FIELDS)
 
     def __str__(self):
         return self.title
-    
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -62,11 +64,11 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("category-detail", args=[self.pk])
-    
+
 
 class Brand(models.Model):
     name = models.CharField(max_length=50)
@@ -75,16 +77,21 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Product(models.Model):
-    product_type = models.ForeignKey(ProductType , on_delete=models.PROTECT, related_name='products_types')
+    product_type = models.ForeignKey(
+        ProductType, on_delete=models.PROTECT, related_name='products_types')
     upc = models.BigIntegerField(unique=True)
     title = models.CharField(max_length=32)
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='products')
+    category = models.ForeignKey(
+        Category, on_delete=models.PROTECT, related_name='products'
+    )
+    brand = models.ForeignKey(
+        Brand, on_delete=models.PROTECT, related_name='products'
+    )
 
     default_manager = models.Manager
     objects = iSActiveManager()
@@ -92,17 +99,28 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     @property
     def stock(self):
         return self.partners.all().order_by('price').first()
 
 
+class ProductImage(models.Model):
+    image = models.ImageField(upload_to='products/')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='images'
+    )
+
+    def __str__(self):
+        return str(self.product)
+
+
 class ProductAttributeValue(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE , related_name='attribute_values')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='attribute_values')
     value = models.CharField(max_length=48)
-    attribute = models.ForeignKey(ProductAttribute, on_delete=models.PROTECT, related_name='values')
+    attribute = models.ForeignKey(
+        ProductAttribute, on_delete=models.PROTECT, related_name='values')
 
     def __str__(self):
         return f"{self.product}({self.attribute}): {self.value}"
-    
