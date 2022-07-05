@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    'basket.apps.BasketConfig',
     'blog.apps.BlogConfig',
     'catalogue.apps.CatalogueConfig',
     'partner.apps.PartnerConfig',
