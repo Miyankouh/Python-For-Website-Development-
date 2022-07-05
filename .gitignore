@@ -20,6 +20,8 @@
 
 local_*.py
 
+Posts.db
+
 ### Django ###
 *.log
 *.pot
