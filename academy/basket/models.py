@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 from catalogue.models import Product
 
 
@@ -11,6 +10,15 @@ class Basket(models.Model):
     def __str__(self):
         return str(self.user)
 
+    def add(self, product):
+        if self.lines.filter(product=product).exists():
+            product_line = self.lines.filter(product=product)
+            product_line.quantity += 1
+            product_line.save()
+        else:
+            product_line = self.lines.create(product=product)
+        return product_line
+
 
 class BasketLine(models.Model):
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE, related_name='lines')
@@ -19,4 +27,3 @@ class BasketLine(models.Model):
 
     def __str__(self):
         return f"{self.basket} => {self.product}, {self.quantity}"
-    
