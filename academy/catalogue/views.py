@@ -3,6 +3,7 @@ from django.views.decorators.http import require_http_methods, require_GET, requ
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.db.models import Q
 from django.http import Http404, HttpResponse
+from basket.forms import AddToBasketForm
 from catalogue.models import Brand, Category, Product, ProductType
 from catalogue.utils import check_is_active, check_is_staff
 
@@ -45,7 +46,8 @@ def product_detail(request, pk):
         is_active=True).filter(Q(pk=pk) | Q(upc=pk))
     if queryset.exists():
         product = queryset.first() 
-        return render(request, 'catalogue/product_detail.html', {"product":product})
+        form = AddToBasketForm({"product": product.id, "quantity": 1})
+        return render(request, 'catalogue/product_detail.html', {"product":product, "form":form})
     raise Http404
 
 def category_products(request, pk):
