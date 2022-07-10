@@ -1,3 +1,25 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.views.decorators.http import require_http_methods
 
-# Create your views here.
+from shipping.forms import SippingAddressForm
+
+def address_list(request):
+    return HttpResponse("Address list")
+
+
+@login_required
+@require_http_methods(request_method_list=['GET', 'POST'])
+def address_create(request):
+    if request.method == "POST":
+        form = SippingAddressForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            return redirect('address-list')
+
+    else:
+        form = SippingAddressForm()
+    return render(request, 'shipping/create.html', {'form': form})
