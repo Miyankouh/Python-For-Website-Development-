@@ -8,10 +8,17 @@
 
 
 {% block data %}
-    {% for pi in product.images.all  %}
-        <img src="{{ pi.image.url }}">
-    {% endfor %}
+    {# for pi in product.images.all  #}
+        <!-- <img src="{{ pi.image.url }}"> -->
+    {# endfor #}
     <h3> {{product.title|title}} </h3>
     <p>  {{product.description|truncatewords:5}} </p>
     <p>$ {{product.stock.price}} </p>
+
+    <form method="post" action="{% url 'add-to-basket' %}">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{product.id}}">
+        <button type="submit">Add to Basket</button>
+    </form>
+
 {% endblock %}
