@@ -10,13 +10,13 @@ class Basket(models.Model):
     def __str__(self):
         return str(self.user)
 
-    def add(self, product):
+    def add(self, product, qty=1):
         if self.lines.filter(product=product).exists():
-            product_line = self.lines.filter(product=product)
-            product_line.quantity += 1
+            product_line = self.lines.filter(product=product).first()
+            product_line.quantity += qty
             product_line.save()
         else:
-            product_line = self.lines.create(product=product)
+            product_line = self.lines.create(product=product, quantity=qty)
         return product_line
 
 
