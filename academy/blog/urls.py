@@ -20,4 +20,5 @@ urlpatterns = [
 
     re_path(r"archive/(?P<code>[0-9]{4})/", post_list),
     re_path(r"archive/(?P<code>[0-9]{6})/", post_list),
+    
 ]

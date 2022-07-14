@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from django.views.generic import TemplateView
 
 def post_list(request, year=None, month=None):
     if month is not None:
@@ -22,3 +22,11 @@ def post_detail(request, post_title):
 
 def custom_post_detail(request):
     return HttpResponse('custom detail page')
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+class CustomTemplateView(TemplateView):
+    pass
