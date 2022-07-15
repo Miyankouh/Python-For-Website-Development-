@@ -8,7 +8,7 @@ register_converter(FourDigitYear, 'fourdigit')
 
 urlpatterns = [
     path("list/", post_list),
-    path("detail/<int:post_id>/", post_detail ),
+    path("detail/<int:pk>/", post_detail ),
     path("detail/<uuid:post_uuid>/", post_detail ),
     path("detail/<slug:post_slug>/", post_detail ),
     re_path(r'detail/(?P<post_slug>[\w-])+/', post_detail),
