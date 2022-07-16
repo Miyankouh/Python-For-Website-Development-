@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Charge wallet</title>
+</head>
+<body>
+        <p> charge wallet </p> 
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type='submit'> post</button>
+        </form>
+</body>
+</html> 
+
