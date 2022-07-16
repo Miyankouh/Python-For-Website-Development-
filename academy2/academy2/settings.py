@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'finance.apps.FinanceConfig'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'academy2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,3 +124,10 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+from academy2.local_settings import ZARRINPAL_MERCHANT_ID
+ZARRINPAL = {
+    'gateway_request_url': 'https://www.zarinpal.com/pg/services/WebGate/wsdt',
+    'gateway_callback_url': 'http://127.0.0.1/finance/verify',
+    'merchant_id': ZARRINPAL_MERCHANT_ID
+}
