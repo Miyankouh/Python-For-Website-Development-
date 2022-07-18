@@ -1,7 +1,7 @@
 from django.urls import path
-from django.views.generic import TemplateView
+from package.views import PricingView
 
 
 urlpatterns = [
-    path('pricing/', TemplateView.as_view(template_name='package/pricing_page.html'))
+    path('pricing/', PricingView.as_view())
 ]
