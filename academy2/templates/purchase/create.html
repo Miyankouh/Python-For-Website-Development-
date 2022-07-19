@@ -1,0 +1,16 @@
+<!Doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <title>create page</title>
+
+</head>
+<body>
+    {% if purchase %}
+        Purchase number : {{ purchase.id }} created, status: {{ purchase.get_status_display }}
+    {% else %}
+        Purchase not created
+    {% endif %}
+</body>
+</html>
