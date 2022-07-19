@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # my app
     'finance.apps.FinanceConfig',
     'package.apps.PackageConfig',
+    'purchase.apps.PurchaseConfig',
 ]
 
 MIDDLEWARE = [
